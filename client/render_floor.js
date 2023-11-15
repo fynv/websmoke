@@ -83,7 +83,7 @@ fn fs_main(@location(0) uv: vec2f, @location(1) world_pos: vec3f) -> @location(0
     pos_light_proj*=1.0/pos_light_proj.w;
 
     let dis_light = length(pos_light);
-    let dis_rate = 100.0/(dis_light*dis_light);
+    let dis_rate = 50.0/(dis_light*dis_light);
 
     let lightUV = vec2((pos_light_proj.x + 1.0)*0.5, (1.0 - pos_light_proj.y)*0.5);
 
@@ -92,8 +92,13 @@ fn fs_main(@location(0) uv: vec2f, @location(1) world_pos: vec3f) -> @location(0
     {
         lightAlpha = textureSampleLevel(uTexLight, uSampler2, lightUV, 0).x;
     }
+
     let col = textureSampleLevel(uTex, uSampler1, uv, 0).xyz;
-    let col_shaded = vec3(1.0, 1.0, 0.5) * col * dis_rate * (1.0-lightAlpha);
+        
+    let light_dir = normalize(-pos_light.xyz);
+    let light_dir_world = uLightCamera.invViewMat * vec4(light_dir, 0.0);
+    let dot_light_norm = max(light_dir_world.y, 0.0);
+    let col_shaded = vec3(1.0, 1.0, 0.5) * col * dis_rate * (1.0-lightAlpha) * dot_light_norm;
 
     return vec4(col_shaded, 1.0);
 }

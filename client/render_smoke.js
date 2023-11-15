@@ -97,7 +97,7 @@ fn fs_main(@location(0) uv: vec2f, @location(1) world_pos: vec3f) -> @location(0
         lightAlpha = textureSampleLevel(uTexLight, uSampler, lightUV, 0).x;
     }
 
-    let col = vec3(1.0, 1.0, 0.5) * dis_rate * (1.0-lightAlpha);
+    let col = vec3(1.0, 1.0, 0.5) * vec3(0.7, 0.7, 0.7) * dis_rate * (1.0-lightAlpha);
     let a = alpha * (1.0 - mag * mag);
     return vec4(col*a, a);
 }
